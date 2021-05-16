@@ -5,30 +5,36 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.NotBlank;
+import javax.persistence.ManyToOne;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 
 import com.ntconsult.desafio.domain.ValidationGroups;
 
 @Entity
-public class Pauta {
-
-	@NotNull(groups = ValidationGroups.PautaId.class)
+public class Voto {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	@Column(name = "javotou")
+	private Boolean simounao;
 
-	@NotBlank
-	@Size(max = 60)
-	@Column(name = "nome")
-	private String nome;
-
-	@NotBlank
-	@Size(max = 255)
-	@Column(name = "descricao")
-	private String descricao;
-
+	@Valid
+	@ConvertGroup(from = Default.class, to = ValidationGroups.PautaId.class)
+	@NotNull
+	@ManyToOne
+	private Pauta pauta;
+	
+	@Valid
+	@ConvertGroup(from = Default.class, to = ValidationGroups.AssociadoId.class)
+	@NotNull
+	@ManyToOne
+	private Associado associado;
+	
 	public Long getId() {
 		return id;
 	}
@@ -37,22 +43,30 @@ public class Pauta {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
+	public Boolean getSimounao() {
+		return simounao;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setSimounao(Boolean simounao) {
+		this.simounao = simounao;
 	}
 
-	public String getDescricao() {
-		return descricao;
+	public Pauta getPauta() {
+		return pauta;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setPauta(Pauta pauta) {
+		this.pauta = pauta;
 	}
 
+	public Associado getAssociado() {
+		return associado;
+	}
+
+	public void setAssociado(Associado associado) {
+		this.associado = associado;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -69,7 +83,7 @@ public class Pauta {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Pauta other = (Pauta) obj;
+		Voto other = (Voto) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -77,5 +91,5 @@ public class Pauta {
 			return false;
 		return true;
 	}
-
+	
 }

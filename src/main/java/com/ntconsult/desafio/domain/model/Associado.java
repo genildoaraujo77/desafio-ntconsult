@@ -1,10 +1,11 @@
 package com.ntconsult.desafio.domain.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -12,23 +13,21 @@ import javax.validation.constraints.Size;
 import com.ntconsult.desafio.domain.ValidationGroups;
 
 @Entity
-public class Pauta {
-
-	@NotNull(groups = ValidationGroups.PautaId.class)
+public class Associado {
+	
+	@NotNull(groups = ValidationGroups.AssociadoId.class)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
 	@NotBlank
 	@Size(max = 60)
-	@Column(name = "nome")
 	private String nome;
-
+	
 	@NotBlank
-	@Size(max = 255)
-	@Column(name = "descricao")
-	private String descricao;
-
+	@Size(max = 11)
+	private String cpf;
+	
 	public Long getId() {
 		return id;
 	}
@@ -45,12 +44,12 @@ public class Pauta {
 		this.nome = nome;
 	}
 
-	public String getDescricao() {
-		return descricao;
+	public String getCpf() {
+		return cpf;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
 	}
 
 	@Override
@@ -69,7 +68,7 @@ public class Pauta {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Pauta other = (Pauta) obj;
+		Associado other = (Associado) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -77,5 +76,5 @@ public class Pauta {
 			return false;
 		return true;
 	}
-
+	
 }

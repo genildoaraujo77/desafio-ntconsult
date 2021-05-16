@@ -1,13 +1,13 @@
 package com.ntconsult.desafio.domain.exception;
 
-public class NegocioException extends RuntimeException {
+public class VotacaoException extends RuntimeException {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public NegocioException(String message) {
+	public VotacaoException(String message) {
 		super(message);
 	}
 

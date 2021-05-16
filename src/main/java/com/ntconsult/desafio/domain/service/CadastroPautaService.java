@@ -3,7 +3,7 @@ package com.ntconsult.desafio.domain.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ntconsult.desafio.domain.exception.NegocioException;
+import com.ntconsult.desafio.domain.exception.VotacaoException;
 import com.ntconsult.desafio.domain.model.Pauta;
 import com.ntconsult.desafio.domain.repository.PautaRepository;
 
@@ -17,7 +17,7 @@ public class CadastroPautaService {
 		Pauta pautaExistente = pautaRepository.findByNome(pauta.getNome());
 		
 		if(pautaExistente != null && !pautaExistente.equals(pauta)) {
-			throw new NegocioException("Já existe uma pauta cadastrada com o mesmo nome.");
+			throw new VotacaoException("Já existe uma pauta cadastrada com o mesmo nome.");
 		}
 		return pautaRepository.save(pauta);
 	}

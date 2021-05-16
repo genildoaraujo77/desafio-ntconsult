@@ -35,8 +35,6 @@ public class PautasController {
 	@GetMapping
 	public List<Pauta> listar() {
 		return pautaRepository.findAll();
-//		return pautaRepository.findByNome("Pauta 1");
-//		return pautaRepository.findByNomeContaining("1");
 	}
 	
 	@GetMapping("/{pautaId}")
