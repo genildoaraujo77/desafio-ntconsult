@@ -2,25 +2,13 @@ package com.ntconsult.desafio.model;
 
 import java.time.OffsetDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToOne;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
-import com.ntconsult.desafio.domain.ValidationGroups;
 import com.ntconsult.desafio.domain.model.Pauta;
 import com.ntconsult.desafio.domain.model.StatusSessao;
 
 public class SessaoVotacaoModel {
 	private Long id;
 
-	private String nomePauta;
+	private Pauta pauta;
 	
 	private Integer qtdvotos;
 	
@@ -38,12 +26,12 @@ public class SessaoVotacaoModel {
 		this.id = id;
 	}
 
-	public String getNomePauta() {
-		return nomePauta;
+	public Pauta getPauta() {
+		return pauta;
 	}
 
-	public void setNomePauta(String nomePauta) {
-		this.nomePauta = nomePauta;
+	public void setPauta(Pauta pauta) {
+		this.pauta = pauta;
 	}
 
 	public Integer getQtdvotos() {

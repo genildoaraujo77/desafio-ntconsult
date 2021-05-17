@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ntconsult.desafio.domain.model.SessaoVotacao;
 import com.ntconsult.desafio.domain.repository.SessaoVotacaoRepository;
+import com.ntconsult.desafio.domain.repository.VotoRepository;
 import com.ntconsult.desafio.domain.service.SessaoVotacaoService;
+import com.ntconsult.desafio.model.SessaoVotacaoInput;
 import com.ntconsult.desafio.model.SessaoVotacaoModel;
 
 @RestController
@@ -31,13 +33,17 @@ public class SessaoVotacaoController {
 	
 	@Autowired
 	private SessaoVotacaoRepository sessaoVotacaoRepository;
+
+	@Autowired
+	private VotoRepository votoRepository;
 	
 	@Autowired
 	private ModelMapper modelMapper;
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public SessaoVotacaoModel criar(@Valid @RequestBody SessaoVotacao sessaoVotacao) {
+	public SessaoVotacaoModel criar(@Valid @RequestBody SessaoVotacaoInput sessaoVotacaoInput) {
+		SessaoVotacao sessaoVotacao = toEntity(sessaoVotacaoInput);
 		return toModel(sessaoVotacaoService.criar(sessaoVotacao));
 	}
 	
@@ -58,7 +64,14 @@ public class SessaoVotacaoController {
 		return ResponseEntity.notFound().build();
 	}
 	
+//	@PutMapping("/{sessaoVotacaoId}/finalizacao")
+//	@ResponseStatus(HttpStatus.NO_CONTENT)
+//	public void finalizar(@PathVariable Long sessaoVotacaoId){
+//		sessaoVotacaoService.finalizar(sessaoVotacaoId);
+//	}
+	
 	private SessaoVotacaoModel toModel(SessaoVotacao sessaoVotacao) {
+		sessaoVotacao.qtdVotos();
 		return modelMapper.map(sessaoVotacao, SessaoVotacaoModel.class);
 	}
 	
@@ -68,15 +81,8 @@ public class SessaoVotacaoController {
 				.collect(Collectors.toList());
 	}
 	
-//	@PutMapping("/{sessaoId}")
-//	public ResponseEntity<SessaoVotacao> atualizarSessaoVotacao(@Valid @PathVariable Long sessaoId, @RequestBody SessaoVotacao sessaoVotacao){
-//		if(!sessaoVotacaoRepository.existsById(sessaoId)) {
-//			return ResponseEntity.notFound().build();
-//		}
-//		
-//		sessaoVotacao.setId(sessaoId);
-//		sessaoVotacao = sessaoVotacaoService.atualizar(sessaoVotacao);
-//		
-//		return ResponseEntity.ok(sessaoVotacao);
-//	}
+	private SessaoVotacao toEntity(SessaoVotacaoInput sessaoVotacaoInput) {
+		return modelMapper.map(sessaoVotacaoInput, SessaoVotacao.class);
+	}
+	
 }

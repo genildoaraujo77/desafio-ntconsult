@@ -1,7 +1,6 @@
 create table sessao_votacao (
 id bigint not null auto_increment,
 pauta_id bigint not null,
-qtdvotos integer,
 status varchar(20) not null,
 data_abertura datetime not null,
 data_finalizacao datetime,

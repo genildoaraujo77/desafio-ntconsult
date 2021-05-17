@@ -1,6 +1,8 @@
 package com.ntconsult.desafio.domain.model;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,42 +13,48 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.validation.Valid;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import com.ntconsult.desafio.domain.ValidationGroups;
+import com.ntconsult.desafio.domain.exception.VotacaoException;
 
 @Entity
 public class SessaoVotacao {
 
+	@NotNull(groups = ValidationGroups.AssociadoId.class)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Valid
-	@ConvertGroup(from = Default.class, to = ValidationGroups.PautaId.class)
-	@NotNull
+//	@Valid
+//	@ConvertGroup(from = Default.class, to = ValidationGroups.PautaId.class)
+//	@NotNull
 	@ManyToOne
 	@JoinColumn(unique = true)
 	private Pauta pauta;
 	
-	private Integer qtdvotos;
-	
-	@JsonProperty(access = Access.READ_ONLY)
+//	@JsonProperty(access = Access.READ_ONLY)
 	@Enumerated(EnumType.STRING)
 	private StatusSessao status;
  	
-	@JsonProperty(access = Access.READ_ONLY)
+//	@JsonProperty(access = Access.READ_ONLY)
 	@Column(name = "data_abertura")
 	private OffsetDateTime dataAbertura;
 	
-	@JsonProperty(access = Access.READ_ONLY)
+//	@JsonProperty(access = Access.READ_ONLY)
 	@Column(name = "data_finalizacao")
 	private OffsetDateTime dataFinalizacao;
+	
+	@OneToMany(mappedBy = "sessaoVotacao")
+	private List<Voto> votos = new ArrayList<>();
+	
+	@Transient
+	private Integer qtdvotos;
+
+	@Transient
+	public long tempoSessaoVotacao = 1;
 
 	public Long getId() {
 		return id;
@@ -62,14 +70,6 @@ public class SessaoVotacao {
 
 	public void setPauta(Pauta pauta) {
 		this.pauta = pauta;
-	}
-
-	public Integer getQtdvotos() {
-		return qtdvotos;
-	}
-
-	public void setQtdvotos(Integer qtdvotos) {
-		this.qtdvotos = qtdvotos;
 	}
 
 	public StatusSessao getStatus() {
@@ -95,6 +95,30 @@ public class SessaoVotacao {
 	public void setDataFinalizacao(OffsetDateTime dataFinalizacao) {
 		this.dataFinalizacao = dataFinalizacao;
 	}
+	
+	public List<Voto> getVotos() {
+		return votos;
+	}
+
+	public void setVotos(List<Voto> votos) {
+		this.votos = votos;
+	}
+
+	public long getTempoSessaoVotacao() {
+		return tempoSessaoVotacao;
+	}
+
+	public void setTempoSessaoVotacao(long tempoSessaoVotacao) {
+		this.tempoSessaoVotacao = tempoSessaoVotacao;
+	}
+
+	public Integer getQtdvotos() {
+		return qtdvotos;
+	}
+
+	public void setQtdvotos(Integer qtdvotos) {
+		this.qtdvotos = qtdvotos;
+	}
 
 	@Override
 	public int hashCode() {
@@ -119,6 +143,26 @@ public class SessaoVotacao {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public boolean podeSerFinalizada() {
+		return StatusSessao.ABERTA.equals(getStatus());
+	}
+	
+	public boolean naoPodeSerFinalizada() {
+		return !podeSerFinalizada();
+	}
+	
+	public void finalizar() {
+		if(naoPodeSerFinalizada()) {
+			throw new VotacaoException("Sessao de votação não pode ser finalizada");
+		}
+		
+		setStatus(StatusSessao.FINALIZADA);
+	}
+	
+	public void qtdVotos() {
+		setQtdvotos(getVotos().size());
 	}
 
 }

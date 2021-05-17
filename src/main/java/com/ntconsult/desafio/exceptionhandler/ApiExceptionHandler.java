@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.ntconsult.desafio.domain.exception.EntidadeNaoEncontradaException;
 import com.ntconsult.desafio.domain.exception.VotacaoException;
 
 @ControllerAdvice
@@ -25,6 +26,18 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	@Autowired
 	private MessageSource messageSource;
 
+	@ExceptionHandler(EntidadeNaoEncontradaException.class)
+	public ResponseEntity<Object> handleEntidadeNaoEncontrada(VotacaoException ex, WebRequest request) {
+		var status = HttpStatus.NOT_FOUND;
+		
+		var problema = new Problema();
+		problema.setStatus(status.value());
+		problema.setTitulo(ex.getMessage());
+		problema.setDataHora(OffsetDateTime.now());
+		
+		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
+	}
+	
 	@ExceptionHandler(VotacaoException.class)
 	public ResponseEntity<Object> handleNegocio(VotacaoException ex, WebRequest request) {
 		var status = HttpStatus.BAD_REQUEST;

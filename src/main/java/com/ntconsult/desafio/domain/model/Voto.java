@@ -1,5 +1,7 @@
 package com.ntconsult.desafio.domain.model;
 
+import java.time.OffsetDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,11 +18,12 @@ import com.ntconsult.desafio.domain.ValidationGroups;
 @Entity
 public class Voto {
 	
+	@NotNull(groups = ValidationGroups.VotoId.class)
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "javotou")
+	@Column(name = "voto")
 	private Boolean simounao;
 
 	@Valid
@@ -34,6 +37,15 @@ public class Voto {
 	@NotNull
 	@ManyToOne
 	private Associado associado;
+	
+	@Valid
+	@ConvertGroup(from = Default.class, to = ValidationGroups.AssociadoId.class)
+	@NotNull
+	@ManyToOne
+	private SessaoVotacao sessaoVotacao;
+	
+	@Column(name = "data_envio")
+	private OffsetDateTime dataEnvio;
 	
 	public Long getId() {
 		return id;
@@ -67,6 +79,22 @@ public class Voto {
 		this.associado = associado;
 	}
 	
+	public SessaoVotacao getSessaoVotacao() {
+		return sessaoVotacao;
+	}
+
+	public void setSessaoVotacao(SessaoVotacao sessaoVotacao) {
+		this.sessaoVotacao = sessaoVotacao;
+	}
+
+	public OffsetDateTime getDataEnvio() {
+		return dataEnvio;
+	}
+
+	public void setDataEnvio(OffsetDateTime dataEnvio) {
+		this.dataEnvio = dataEnvio;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
