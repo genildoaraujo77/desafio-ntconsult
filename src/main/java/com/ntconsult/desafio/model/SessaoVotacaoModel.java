@@ -10,7 +10,7 @@ public class SessaoVotacaoModel {
 
 	private Pauta pauta;
 	
-	private Integer qtdvotos;
+	private ResultadoVotacao resultado;
 	
 	private StatusSessao status;
  	
@@ -34,12 +34,12 @@ public class SessaoVotacaoModel {
 		this.pauta = pauta;
 	}
 
-	public Integer getQtdvotos() {
-		return qtdvotos;
+	public ResultadoVotacao getResultado() {
+		return resultado;
 	}
 
-	public void setQtdvotos(Integer qtdvotos) {
-		this.qtdvotos = qtdvotos;
+	public void setResultado(ResultadoVotacao resultado) {
+		this.resultado = resultado;
 	}
 
 	public StatusSessao getStatus() {

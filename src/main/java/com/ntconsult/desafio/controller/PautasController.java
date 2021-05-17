@@ -67,7 +67,7 @@ public class PautasController {
 	}
 	
 	@DeleteMapping("/{pautaId}")
-	public ResponseEntity<Void> atualizarPauta(@PathVariable Long pautaId){
+	public ResponseEntity<Void> deletaPauta(@PathVariable Long pautaId){
 		
 		if(!pautaRepository.existsById(pautaId)) {
 			return ResponseEntity.notFound().build();

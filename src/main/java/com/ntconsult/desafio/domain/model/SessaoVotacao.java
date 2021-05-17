@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
 
 import com.ntconsult.desafio.domain.ValidationGroups;
 import com.ntconsult.desafio.domain.exception.VotacaoException;
+import com.ntconsult.desafio.model.ResultadoVotacao;
 
 @Entity
 public class SessaoVotacao {
@@ -51,7 +52,7 @@ public class SessaoVotacao {
 	private List<Voto> votos = new ArrayList<>();
 	
 	@Transient
-	private Integer qtdvotos;
+	private ResultadoVotacao resultado;
 
 	@Transient
 	public long tempoSessaoVotacao = 1;
@@ -111,13 +112,13 @@ public class SessaoVotacao {
 	public void setTempoSessaoVotacao(long tempoSessaoVotacao) {
 		this.tempoSessaoVotacao = tempoSessaoVotacao;
 	}
-
-	public Integer getQtdvotos() {
-		return qtdvotos;
+	
+	public ResultadoVotacao getResultado() {
+		return resultado;
 	}
 
-	public void setQtdvotos(Integer qtdvotos) {
-		this.qtdvotos = qtdvotos;
+	public void setResultado(ResultadoVotacao resultado) {
+		this.resultado = resultado;
 	}
 
 	@Override
@@ -161,8 +162,4 @@ public class SessaoVotacao {
 		setStatus(StatusSessao.FINALIZADA);
 	}
 	
-	public void qtdVotos() {
-		setQtdvotos(getVotos().size());
-	}
-
 }

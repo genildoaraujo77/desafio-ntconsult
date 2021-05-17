@@ -13,15 +13,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ntconsult.desafio.domain.model.SessaoVotacao;
+import com.ntconsult.desafio.domain.model.Voto;
 import com.ntconsult.desafio.domain.repository.SessaoVotacaoRepository;
-import com.ntconsult.desafio.domain.repository.VotoRepository;
 import com.ntconsult.desafio.domain.service.SessaoVotacaoService;
+import com.ntconsult.desafio.model.ResultadoVotacao;
 import com.ntconsult.desafio.model.SessaoVotacaoInput;
 import com.ntconsult.desafio.model.SessaoVotacaoModel;
 
@@ -34,9 +36,6 @@ public class SessaoVotacaoController {
 	@Autowired
 	private SessaoVotacaoRepository sessaoVotacaoRepository;
 
-	@Autowired
-	private VotoRepository votoRepository;
-	
 	@Autowired
 	private ModelMapper modelMapper;
 	
@@ -64,14 +63,30 @@ public class SessaoVotacaoController {
 		return ResponseEntity.notFound().build();
 	}
 	
-//	@PutMapping("/{sessaoVotacaoId}/finalizacao")
-//	@ResponseStatus(HttpStatus.NO_CONTENT)
-//	public void finalizar(@PathVariable Long sessaoVotacaoId){
-//		sessaoVotacaoService.finalizar(sessaoVotacaoId);
-//	}
+	@PutMapping("/{sessaoVotacaoId}/finalizacao")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void finalizar(@PathVariable Long sessaoVotacaoId){
+		sessaoVotacaoService.finalizarManualmente(sessaoVotacaoId);
+	}
 	
 	private SessaoVotacaoModel toModel(SessaoVotacao sessaoVotacao) {
-		sessaoVotacao.qtdVotos();
+		List<Voto> votos = sessaoVotacao.getVotos();
+		ResultadoVotacao resultado = new ResultadoVotacao();
+		if(votos != null && !votos.isEmpty()) {
+			int nao = 0;
+			int sim = 0;
+			for(Voto voto : votos) {
+				if(voto.getSimounao()) {
+					nao++;
+					resultado.setNao(nao);	
+				}else {
+					sim++;
+					resultado.setSim(sim);
+				}
+			}
+			resultado.setTotal(nao + sim);
+		}
+		sessaoVotacao.setResultado(resultado);
 		return modelMapper.map(sessaoVotacao, SessaoVotacaoModel.class);
 	}
 	

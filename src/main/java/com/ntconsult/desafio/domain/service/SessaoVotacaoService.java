@@ -39,8 +39,7 @@ public class SessaoVotacaoService {
 	private CadastroVotoService cadastroVotoService;
 
 	public SessaoVotacao criar(SessaoVotacao sessaoVotacao) {
-		Pauta pauta = pautaRepository.findById(sessaoVotacao.getPauta().getId())
-				.orElseThrow(() -> new EntidadeNaoEncontradaException("Pauta não encontrada"));
+		Pauta pauta = buscarPauta(sessaoVotacao.getPauta().getId());
 		
 		SessaoVotacao sessao = sessaoVotacaoRepository.findByPauta(sessaoVotacao.getPauta().getId());
 		
@@ -123,6 +122,11 @@ public class SessaoVotacaoService {
 		
 		return cadastroVotoService.salvar(voto);
 	}
+	
+	public void finalizarManualmente(Long sessaoVotacaoId) {
+		SessaoVotacao sessaoVotacao = buscar(sessaoVotacaoId);
+		sessaoVotacao.finalizar();
+	}
 
 	private Associado buscarAssociado(Long associadoId) {
 		return associadoRepository.findById(associadoId)
@@ -138,4 +142,5 @@ public class SessaoVotacaoService {
 		return sessaoVotacaoRepository.findById(sessaoVotacaoId)
 				.orElseThrow(() -> new EntidadeNaoEncontradaException("Sessao não encontrada"));
 	}
+
 }
