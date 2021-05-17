@@ -35,8 +35,6 @@ public class AssociadosController {
 	@GetMapping
 	public List<Associado> listar() {
 		return associadoRepository.findAll();
-//		return associadoRepository.findByNome("Associado 1");
-//		return associadoRepository.findByNomeContaining("1");
 	}
 	
 	@GetMapping("/{associadoId}")

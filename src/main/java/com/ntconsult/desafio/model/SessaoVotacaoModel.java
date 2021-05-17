@@ -2,15 +2,18 @@ package com.ntconsult.desafio.model;
 
 import java.time.OffsetDateTime;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.ntconsult.desafio.domain.model.Pauta;
 import com.ntconsult.desafio.domain.model.StatusSessao;
 
+@JsonInclude(Include.NON_NULL)
 public class SessaoVotacaoModel {
 	private Long id;
 
 	private Pauta pauta;
 	
-	private ResultadoVotacao resultado;
+	private Resultado resultado;
 	
 	private StatusSessao status;
  	
@@ -34,11 +37,11 @@ public class SessaoVotacaoModel {
 		this.pauta = pauta;
 	}
 
-	public ResultadoVotacao getResultado() {
+	public Resultado getResultado() {
 		return resultado;
 	}
 
-	public void setResultado(ResultadoVotacao resultado) {
+	public void setResultado(Resultado resultado) {
 		this.resultado = resultado;
 	}
 

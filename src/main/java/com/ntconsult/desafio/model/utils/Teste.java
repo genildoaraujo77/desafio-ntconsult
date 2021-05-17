@@ -1,11 +1,14 @@
 package com.ntconsult.desafio.model.utils;
 
 import java.time.OffsetDateTime;
+import java.util.Date;
 
 public class Teste {
 
 	public static void main(String[] args) {
-		Utils.criaDataExpiracao(5, OffsetDateTime.now());
+		System.out.println("Offset: " + OffsetDateTime.now());
+		Date data = new Date();
+		System.out.println("data: " + data);
 	}
 
 }

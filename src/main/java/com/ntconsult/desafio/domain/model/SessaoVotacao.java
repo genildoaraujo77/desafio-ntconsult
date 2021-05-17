@@ -1,9 +1,9 @@
 package com.ntconsult.desafio.domain.model;
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,11 +17,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.ntconsult.desafio.domain.ValidationGroups;
 import com.ntconsult.desafio.domain.exception.VotacaoException;
-import com.ntconsult.desafio.model.ResultadoVotacao;
+import com.ntconsult.desafio.model.Resultado;
 
 @Entity
+@JsonInclude(Include.NON_NULL)
 public class SessaoVotacao {
 
 	@NotNull(groups = ValidationGroups.AssociadoId.class)
@@ -49,10 +52,11 @@ public class SessaoVotacao {
 	private OffsetDateTime dataFinalizacao;
 	
 	@OneToMany(mappedBy = "sessaoVotacao")
-	private List<Voto> votos = new ArrayList<>();
+	private List<Voto> votos;
 	
-	@Transient
-	private ResultadoVotacao resultado;
+	@ManyToOne(cascade=CascadeType.PERSIST)
+	@JoinColumn(unique = true)
+	private Resultado resultado;
 
 	@Transient
 	public long tempoSessaoVotacao = 1;
@@ -113,11 +117,11 @@ public class SessaoVotacao {
 		this.tempoSessaoVotacao = tempoSessaoVotacao;
 	}
 	
-	public ResultadoVotacao getResultado() {
+	public Resultado getResultado() {
 		return resultado;
 	}
 
-	public void setResultado(ResultadoVotacao resultado) {
+	public void setResultado(Resultado resultado) {
 		this.resultado = resultado;
 	}
 

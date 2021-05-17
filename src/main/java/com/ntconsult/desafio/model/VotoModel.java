@@ -3,7 +3,6 @@ package com.ntconsult.desafio.model;
 import java.time.OffsetDateTime;
 
 import com.ntconsult.desafio.domain.model.Pauta;
-import com.ntconsult.desafio.domain.model.SessaoVotacao;
 
 public class VotoModel {
 

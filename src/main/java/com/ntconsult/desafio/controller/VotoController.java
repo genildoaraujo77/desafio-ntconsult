@@ -10,11 +10,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -41,9 +39,6 @@ public class VotoController {
 	private SessaoVotacaoRepository sessaoVotacaoRepository;
 	
 	@Autowired
-	private CadastroVotoService cadastroVotoService;
-	
-	@Autowired
 	private SessaoVotacaoService sessaoVotacaoService;	
 	
 	@Autowired
@@ -68,42 +63,12 @@ public class VotoController {
 		return ResponseEntity.notFound().build();
 	}
 	
-//	@PostMapping
-//	@ResponseStatus(HttpStatus.CREATED)
-//	public VotoModel criarVoto(@Valid @RequestBody Voto voto) {
-//		return toModel(cadastroVotoService.salvar(voto));
-//	}
-	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public VotoModel criarVoto(@PathVariable Long sessaoVotacaoId, 
 			@Valid @RequestBody VotoInput votoInput) {
 		Voto voto = sessaoVotacaoService.votar(sessaoVotacaoId, votoInput.getPauta().getId(), votoInput.getAssociado().getId(), votoInput.getSimounao());
 		return toModel(voto);
-	}
-	
-	@PutMapping("/{votoId}")
-	public ResponseEntity<Voto> atualizarVoto(@Valid @PathVariable Long votoId, @RequestBody Voto voto){
-		if(!votoRepository.existsById(votoId)) {
-			return ResponseEntity.notFound().build();
-		}
-		
-		voto.setId(votoId);
-		voto = cadastroVotoService.salvar(voto);
-		
-		return ResponseEntity.ok(voto);
-	}
-	
-	@DeleteMapping("/{votoId}")
-	public ResponseEntity<Void> deletarVoto(@PathVariable Long votoId){
-		
-		if(!votoRepository.existsById(votoId)) {
-			return ResponseEntity.notFound().build();
-		}
-		
-		cadastroVotoService.excluir(votoId);
-		
-		return ResponseEntity.noContent().build();
 	}
 	
 	private VotoModel toModel(Voto voto) {
