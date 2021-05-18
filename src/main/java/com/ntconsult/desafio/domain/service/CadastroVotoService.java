@@ -14,8 +14,8 @@ public class CadastroVotoService {
 	private VotoRepository votoRepository;
 	
 	public Voto salvar(Voto voto) {
-		var idPauta = voto.getPauta().getId();
-		var idAssociado = voto.getAssociado().getId();
+		Long idPauta = voto.getPauta().getId();
+		Long idAssociado = voto.getAssociado().getId();
 		
 		Voto votoExistente = votoRepository.findByVoto(idPauta, idAssociado);
 		
