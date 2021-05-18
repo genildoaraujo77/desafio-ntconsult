@@ -23,7 +23,6 @@ import com.ntconsult.desafio.domain.model.SessaoVotacao;
 import com.ntconsult.desafio.domain.model.Voto;
 import com.ntconsult.desafio.domain.repository.SessaoVotacaoRepository;
 import com.ntconsult.desafio.domain.repository.VotoRepository;
-import com.ntconsult.desafio.domain.service.CadastroVotoService;
 import com.ntconsult.desafio.domain.service.SessaoVotacaoService;
 import com.ntconsult.desafio.model.VotoInput;
 import com.ntconsult.desafio.model.VotoModel;
@@ -49,7 +48,7 @@ public class VotoController {
 		SessaoVotacao sessaoVotacao = sessaoVotacaoRepository.findById(sessaoVotacaoId)
 				.orElseThrow(() -> new EntidadeNaoEncontradaException("Sessao de votação não encontrada"));
 
-		return toCollectionModel(sessaoVotacao.getVotos());
+		return toCollectionModel(sessaoVotacao);
 	}
 	
 	@GetMapping("/{votoId}")
@@ -67,7 +66,7 @@ public class VotoController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public VotoModel criarVoto(@PathVariable Long sessaoVotacaoId, 
 			@Valid @RequestBody VotoInput votoInput) {
-		Voto voto = sessaoVotacaoService.votar(sessaoVotacaoId, votoInput.getPauta().getId(), votoInput.getAssociado().getId(), votoInput.getSimounao());
+		Voto voto = sessaoVotacaoService.votar(sessaoVotacaoId, votoInput.getPauta().getId(), votoInput.getAssociado().getCpf(), votoInput.getSimounao());
 		return toModel(voto);
 	}
 	
@@ -75,7 +74,8 @@ public class VotoController {
 		return modelMapper.map(voto, VotoModel.class);
 	}
 	
-	private List<VotoModel> toCollectionModel(List<Voto> votos){
+	private List<VotoModel> toCollectionModel(SessaoVotacao sessaoVotacao){
+		List<Voto> votos = sessaoVotacaoService.buscarVotos(sessaoVotacao.getId());
 		return votos.stream()
 				.map(voto -> toModel(voto))
 				.collect(Collectors.toList());

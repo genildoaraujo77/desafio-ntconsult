@@ -29,6 +29,8 @@ import com.ntconsult.desafio.domain.repository.ResultadoRepository;
 import com.ntconsult.desafio.domain.repository.SessaoVotacaoRepository;
 import com.ntconsult.desafio.domain.repository.VotoRepository;
 import com.ntconsult.desafio.model.Resultado;
+import com.ntconsult.desafio.model.StatusAssociado;
+import com.ntconsult.desafio.model.utils.TarefaBonusUm;
 import com.ntconsult.desafio.model.utils.Utils;
 
 @Service
@@ -55,7 +57,7 @@ public class SessaoVotacaoService {
 
 	@EventListener(ApplicationReadyEvent.class)
 	public void warmup() throws IOException, InterruptedException, ServletException {
-		System.out.println("Código executado logo após a aplicação ser startada");
+		LOG.info("Aplicação iniciada");
 		verificaSessoes();
 	}
 
@@ -80,28 +82,13 @@ public class SessaoVotacaoService {
 
 		sessaoVotacao.setDataFinalizacao(dataExpiracao);
 
-//		long time = (sessaoVotacao.getTempoSessaoVotacao() * 1000) * 60;
 		long epochMilli = sessaoVotacao.getDataFinalizacao().toInstant().toEpochMilli();
 		Date date = new Date(epochMilli);
 
-//		finalizarSessaoVotacao(time);
 		finalizarSessaoVotacao(date);
 
 		return sessaoVotacaoRepository.save(sessaoVotacao);
 	}
-
-//	public void finalizarSessaoVotacao(long time) {
-//		Timer timer = new Timer();
-//		TimerTask task = new TimerTask() {
-//
-//			@Override
-//			public void run() {
-//				finalizar(OffsetDateTime.now());
-//			}
-//		};
-//		long timeLong = time;
-//		timer.schedule(task, timeLong);
-//	}
 
 	private void verificaSessoes() {
 		List<SessaoVotacao> sessoesVotacao = sessaoVotacaoRepository.findByStatus("ABERTA");
@@ -184,12 +171,22 @@ public class SessaoVotacaoService {
 		return resultado;
 	}
 
-	public Voto votar(Long sessaoVotacaoId, Long pautaId, Long associadoId, Boolean simounao) {
+	public Voto votar(Long sessaoVotacaoId, Long pautaId, String associadoCpf, Boolean simounao) {
 		SessaoVotacao sessaoVotacao = buscar(sessaoVotacaoId);
 
 		Pauta pauta = buscarPauta(pautaId);
+		
+		StatusAssociado status = TarefaBonusUm.validarCpf(associadoCpf);
 
-		Associado associado = buscarAssociado(associadoId);
+		Associado associado = null;
+		if(status != null) {
+			associado = buscarAssociado(associadoCpf);
+			if(associado != null) {
+			associado.setStatus(status.getStatus());
+			}else{
+				throw new EntidadeNaoEncontradaException("Associado não encontrado");
+			}
+		}
 
 		if (sessaoVotacao.getStatus().equals(StatusSessao.FINALIZADA)) {
 			LOG.info("Está seção foi encerrada as: " + sessaoVotacao.getDataFinalizacao());
@@ -198,6 +195,10 @@ public class SessaoVotacaoService {
 
 		if (!sessaoVotacao.getPauta().equals(pauta)) {
 			throw new VotacaoException("Está pauta não está sendo votada nesta sessão");
+		}
+
+		if (!associado.getStatus().equals("ABLE_TO_VOTE")) {
+			throw new VotacaoException("Desculpe, mas você não tem permissão para votar nesta pauta");
 		}
 
 		Voto voto = new Voto();
@@ -210,9 +211,21 @@ public class SessaoVotacaoService {
 		return cadastroVotoService.salvar(voto);
 	}
 
-	private Associado buscarAssociado(Long associadoId) {
-		return associadoRepository.findById(associadoId)
-				.orElseThrow(() -> new EntidadeNaoEncontradaException("Associado não encontrado"));
+//	private Associado buscarAssociado(Long associadoId) {
+//		return associadoRepository.findById(associadoId)
+//				.orElseThrow(() -> new EntidadeNaoEncontradaException("Associado não encontrado"));
+//	}
+	
+//	private Associado buscarAssociado(String associadoCpf) {
+//		Associado associado = associadoRepository.findByCpf(associadoCpf);
+//		if(associado == null) {
+//			new EntidadeNaoEncontradaException("Associado não encontrado");
+//		}
+//		return associado;
+//	}
+	
+	private Associado buscarAssociado(String associadoCpf) {
+		return associadoRepository.findByCpf(associadoCpf);
 	}
 
 	private Pauta buscarPauta(Long pautaId) {

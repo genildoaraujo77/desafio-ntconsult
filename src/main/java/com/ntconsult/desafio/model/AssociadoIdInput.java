@@ -7,14 +7,14 @@ public class AssociadoIdInput {
 
 	@Valid
 	@NotNull
-	private Long id;
+	private String cpf;
 
-	public Long getId() {
-		return id;
+	public String getCpf() {
+		return cpf;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
 	}
 	
 }

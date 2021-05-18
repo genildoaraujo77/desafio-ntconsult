@@ -1,16 +1,21 @@
 package com.ntconsult.desafio.domain.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.ntconsult.desafio.domain.ValidationGroups;
 
 @Entity
+@JsonInclude(Include.NON_NULL)
 public class Associado {
 	
 	@NotNull(groups = ValidationGroups.AssociadoId.class)
@@ -24,7 +29,11 @@ public class Associado {
 	
 	@NotBlank
 	@Size(max = 11)
+	@Column(unique = true)
 	private String cpf;
+	
+	@Transient
+	private String status;
 	
 	public Long getId() {
 		return id;
@@ -48,6 +57,14 @@ public class Associado {
 
 	public void setCpf(String cpf) {
 		this.cpf = cpf;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	@Override
@@ -74,5 +91,5 @@ public class Associado {
 			return false;
 		return true;
 	}
-	
+
 }

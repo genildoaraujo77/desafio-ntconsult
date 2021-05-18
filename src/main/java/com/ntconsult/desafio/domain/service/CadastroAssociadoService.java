@@ -14,7 +14,7 @@ public class CadastroAssociadoService {
 	private AssociadoRepository associadoRepository;
 	
 	public Associado salvar(Associado associado) {
-		Associado associadoExistente = associadoRepository.findByCpf(associado.getCpf());
+		Associado associadoExistente = buscarAssociado(associado.getCpf());
 		
 		if(associadoExistente != null && !associadoExistente.equals(associado)) {
 			throw new VotacaoException("Já existe uma associado cadastrado com o mesmo cpf.");
@@ -24,5 +24,9 @@ public class CadastroAssociadoService {
 	
 	public void excluir(Long associadoId) {
 		associadoRepository.deleteById(associadoId);
+	}
+	
+	private Associado buscarAssociado(String associadoCpf) {
+		return associadoRepository.findByCpf(associadoCpf);
 	}
 }

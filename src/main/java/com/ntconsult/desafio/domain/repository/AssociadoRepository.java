@@ -8,7 +8,5 @@ import com.ntconsult.desafio.domain.model.Associado;
 @Repository
 public interface AssociadoRepository extends JpaRepository<Associado, Long> {
 	
-//	List<Associado> findByNome(String nome);
-//	List<Associado> findByNomeContaining(String nome);
 	Associado findByCpf(String cpf);
 }

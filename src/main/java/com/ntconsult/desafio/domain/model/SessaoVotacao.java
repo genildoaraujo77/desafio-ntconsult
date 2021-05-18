@@ -32,22 +32,16 @@ public class SessaoVotacao {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-//	@Valid
-//	@ConvertGroup(from = Default.class, to = ValidationGroups.PautaId.class)
-//	@NotNull
 	@ManyToOne
 	@JoinColumn(unique = true)
 	private Pauta pauta;
 	
-//	@JsonProperty(access = Access.READ_ONLY)
 	@Enumerated(EnumType.STRING)
 	private StatusSessao status;
  	
-//	@JsonProperty(access = Access.READ_ONLY)
 	@Column(name = "data_abertura")
 	private OffsetDateTime dataAbertura;
 	
-//	@JsonProperty(access = Access.READ_ONLY)
 	@Column(name = "data_finalizacao")
 	private OffsetDateTime dataFinalizacao;
 	
