@@ -64,7 +64,7 @@ public class SessaoVotacaoService {
 	public SessaoVotacao criar(SessaoVotacao sessaoVotacao) {
 		Pauta pauta = buscarPauta(sessaoVotacao.getPauta().getId());
 
-		SessaoVotacao sessao = sessaoVotacaoRepository.findByPauta(sessaoVotacao.getPauta().getId());
+		SessaoVotacao sessao = sessaoVotacaoRepository.findByPautaId(sessaoVotacao.getPauta().getId());
 
 		if (sessao != null && !sessao.equals(sessaoVotacao)) {
 			LOG.info("Já existe uma sessão para esta pauta.");
@@ -91,7 +91,7 @@ public class SessaoVotacaoService {
 	}
 
 	private void verificaSessoes() {
-		List<SessaoVotacao> sessoesVotacao = sessaoVotacaoRepository.findByStatus("ABERTA");
+		List<SessaoVotacao> sessoesVotacao = sessaoVotacaoRepository.findByStatusSessao("ABERTA");
 
 		if (sessoesVotacao != null && !sessoesVotacao.isEmpty()) {
 			for (SessaoVotacao sessaoVotacao : sessoesVotacao) {
@@ -128,7 +128,7 @@ public class SessaoVotacaoService {
 	}
 
 	public void finalizar(OffsetDateTime offsetDateTime) {
-		List<SessaoVotacao> sessoesVotacao = sessaoVotacaoRepository.findByStatus("ABERTA");
+		List<SessaoVotacao> sessoesVotacao = sessaoVotacaoRepository.findByStatusSessao("ABERTA");
 		if (sessoesVotacao != null && !sessoesVotacao.isEmpty()) {
 			for (SessaoVotacao sessaoVotacao : sessoesVotacao) {
 				if (offsetDateTime.isAfter(sessaoVotacao.getDataFinalizacao()) || offsetDateTime.isEqual(sessaoVotacao.getDataFinalizacao())) {

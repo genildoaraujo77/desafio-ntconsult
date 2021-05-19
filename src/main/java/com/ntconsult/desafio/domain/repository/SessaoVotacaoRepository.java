@@ -12,9 +12,9 @@ import com.ntconsult.desafio.domain.model.SessaoVotacao;
 public interface SessaoVotacaoRepository extends JpaRepository<SessaoVotacao, Long>{
 
 	@Query(value = "SELECT * FROM sessao_votacao where pauta_id = ?1", nativeQuery = true)
-	SessaoVotacao findByPauta(Long id);
+	SessaoVotacao findByPautaId(Long id);
 
 	@Query(value = "SELECT * FROM sessao_votacao where status = ?1", nativeQuery = true)
-	List<SessaoVotacao> findByStatus(String aberta);
+	List<SessaoVotacao> findByStatusSessao(String aberta);
 
 }

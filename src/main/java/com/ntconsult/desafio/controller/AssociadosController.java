@@ -67,7 +67,7 @@ public class AssociadosController {
 	}
 	
 	@DeleteMapping("/{associadoId}")
-	public ResponseEntity<Void> atualizarAssociado(@PathVariable Long associadoId){
+	public ResponseEntity<Void> excluirAssociado(@PathVariable Long associadoId){
 		
 		if(!associadoRepository.existsById(associadoId)) {
 			return ResponseEntity.notFound().build();

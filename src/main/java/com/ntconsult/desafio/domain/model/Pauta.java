@@ -8,7 +8,11 @@ import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 @Entity
+@JsonInclude(Include.NON_NULL)
 public class Pauta {
 
 	@Id
@@ -24,7 +28,7 @@ public class Pauta {
 	@Size(max = 255)
 	@Column(name = "descricao")
 	private String descricao;
-
+	
 	public Long getId() {
 		return id;
 	}
@@ -72,6 +76,11 @@ public class Pauta {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Pauta [id=" + id + ", nome=" + nome + ", descricao=" + descricao + "]";
 	}
 
 }
