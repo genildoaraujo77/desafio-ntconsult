@@ -129,7 +129,7 @@ Até o seguinte momento só foi possível implementar o desafio principal solici
 
 # Foram criadas as classes java abaixo para realização de testes seguindo os padrões TDD do Junit
 ## AssociadosControllerTest.java, PautasControllerTest.java, SessaoVotacaoControllerTest 
-Essas classes representam o possíveis testes de funcionamento nas respectivas função de cadas classe no projeto real.
+Essas classes representam o possíveis testes de funcionamento nas respectivas funções de cada classe no projeto real.
 
 # Tarefas Bônus - Não Concluídas
 ● Tarefa Bônus 2 - Mensageria e filas
