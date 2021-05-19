@@ -127,6 +127,10 @@ Nesta requisição podemos listar todos os votos em uma pauta.
 Está é uma documentação de teste que demonstra todos os EndPoints existentes na API de Votação de Pautas por meio de sessões abertas para somente uma pauta por sessão.
 Até o seguinte momento só foi possível implementar o desafio principal solicitado e a Tarefa Bônus 1 - Integração com sistemas externos.
 
+# Foram criadas as classes java abaixo para realização de testes seguindo os padrões TDD do Junit
+## AssociadosControllerTest.java, PautasControllerTest.java, SessaoVotacaoControllerTest 
+Essas classes representam o possíveis testes de funcionamento nas respectivas função de cadas classe no projeto real.
+
 # Tarefas Bônus - Não Concluídas
 ● Tarefa Bônus 2 - Mensageria e filas
 ● Tarefa Bônus 3 - Performance
