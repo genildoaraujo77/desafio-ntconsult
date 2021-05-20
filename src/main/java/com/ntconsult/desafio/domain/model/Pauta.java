@@ -29,6 +29,16 @@ public class Pauta {
 	@Column(name = "descricao")
 	private String descricao;
 	
+	public Pauta() {
+		super();
+	}
+	
+	public Pauta(String nome, String descricao) {
+		super();
+		this.nome = nome;
+		this.descricao = descricao;
+	}
+
 	public Long getId() {
 		return id;
 	}

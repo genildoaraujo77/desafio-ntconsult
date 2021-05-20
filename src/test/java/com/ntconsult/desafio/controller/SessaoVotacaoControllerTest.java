@@ -15,34 +15,47 @@ import com.ntconsult.desafio.domain.exception.VotacaoException;
 import com.ntconsult.desafio.domain.model.Pauta;
 import com.ntconsult.desafio.domain.model.SessaoVotacao;
 import com.ntconsult.desafio.domain.repository.SessaoVotacaoRepository;
+import com.ntconsult.desafio.domain.service.CadastroPautaService;
 import com.ntconsult.desafio.domain.service.SessaoVotacaoService;
 
 @SpringBootTest
 class SessaoVotacaoControllerTest {
 
+	private final SessaoVotacaoService sessaoVotacaoService;
+	private final SessaoVotacaoRepository sessaoVotacaoRepository;
+	private final CadastroPautaService cadastroPautaService;
+
 	@Autowired
-	private SessaoVotacaoService sessaoVotacaoService;
-	
-	@Autowired
-	private SessaoVotacaoRepository sessaoVotacaoRepository;
+	public SessaoVotacaoControllerTest(CadastroPautaService cadastroPautaService, 
+			SessaoVotacaoService sessaoVotacaoService,
+			SessaoVotacaoRepository sessaoVotacaoRepository) {
+		this.cadastroPautaService = cadastroPautaService;
+		this.sessaoVotacaoService = sessaoVotacaoService;
+		this.sessaoVotacaoRepository = sessaoVotacaoRepository;
+	}
 
 	@Test
 	void testAbrirSessaoNovo() {
+		Pauta pauta = new Pauta("Nome nova pauta para sessao", "nova pauta para sessao teste junit");
+		Pauta pautaNova = cadastroPautaService.salvar(pauta);
+		assertEquals(pauta, pautaNova);
 		SessaoVotacao sessaoVotacao = new SessaoVotacao();
-		Pauta pauta = new Pauta();
-		pauta.setId(9L);
-		sessaoVotacao.setPauta(pauta);
+		sessaoVotacao.setPauta(pautaNova);
 		SessaoVotacao sessaoVotacaoNovo = sessaoVotacaoService.criar(sessaoVotacao);
 		assertEquals(sessaoVotacao, sessaoVotacaoNovo);
 	}
 	
 	@Test
 	void testCriarSessaoVotacaoJaExistente() {
+		Pauta pauta = new Pauta("pauta para sessao ja existente", "pauta para sessao ja existente teste junit");
+		Pauta pautaNova = cadastroPautaService.salvar(pauta);
+		assertEquals(pauta, pautaNova);
 		SessaoVotacao sessaoVotacao = new SessaoVotacao();
-		Pauta pauta = new Pauta();
-		pauta.setId(1L);
-		sessaoVotacao.setPauta(pauta);
-		assertThrows(VotacaoException.class, () -> sessaoVotacaoService.criar(sessaoVotacao));
+		sessaoVotacao.setPauta(pautaNova);
+		SessaoVotacao sessaoVotacaoNova = sessaoVotacaoService.criar(sessaoVotacao);
+		assertEquals(sessaoVotacao, sessaoVotacaoNova);
+		sessaoVotacaoNova.setPauta(pautaNova);
+		assertThrows(VotacaoException.class, () -> sessaoVotacaoService.criar(sessaoVotacaoNova));
 	}
 	
 	@Test
@@ -54,9 +67,16 @@ class SessaoVotacaoControllerTest {
 	
 	@Test
 	void testBuscarSessaoVotacao() {
-		Optional<SessaoVotacao> associado = sessaoVotacaoRepository.findById(1L);
+		Pauta pauta = new Pauta("pauta buscar sessao votacao", "pauta para buscar sessao por id");
+		Pauta pautaNova = cadastroPautaService.salvar(pauta);
+		assertEquals(pauta, pautaNova);
+		SessaoVotacao sessaoVotacao = new SessaoVotacao();
+		sessaoVotacao.setPauta(pautaNova);
+		SessaoVotacao sessaoVotacaoNova = sessaoVotacaoService.criar(sessaoVotacao);
+		assertEquals(sessaoVotacao, sessaoVotacaoNova);
+		Optional<SessaoVotacao> sessao = sessaoVotacaoRepository.findById(sessaoVotacaoNova.getId());
 
-		assertEquals(1L, associado.get().getId());
+		assertEquals(sessaoVotacaoNova.getId(), sessao.get().getId());
 
 	}
 	

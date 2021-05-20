@@ -34,7 +34,18 @@ public class Associado {
 	
 	@Transient
 	private String status;
-	
+
+	public Associado() {
+		super();
+	}
+
+	public Associado(String nome,
+			String cpf) {
+		super();
+		this.nome = nome;
+		this.cpf = cpf;
+	}
+
 	public Long getId() {
 		return id;
 	}

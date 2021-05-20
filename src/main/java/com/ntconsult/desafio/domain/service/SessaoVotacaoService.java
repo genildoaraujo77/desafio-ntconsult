@@ -66,7 +66,7 @@ public class SessaoVotacaoService {
 
 		SessaoVotacao sessao = sessaoVotacaoRepository.findByPautaId(sessaoVotacao.getPauta().getId());
 
-		if (sessao != null && !sessao.equals(sessaoVotacao)) {
+		if (sessao != null && sessao.equals(sessaoVotacao)) {
 			LOG.info("Já existe uma sessão para esta pauta.");
 			throw new VotacaoException("Já existe uma sessão para esta pauta.");
 		}

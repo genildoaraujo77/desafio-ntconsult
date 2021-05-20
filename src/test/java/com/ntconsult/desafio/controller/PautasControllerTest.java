@@ -28,14 +28,11 @@ class PautasControllerTest {
 	}
 
 	@Test
-	void testCriarPauta() {
-		Pauta pauta = new Pauta();
-		pauta.setNome("Nome pauta");
-		pauta.setDescricao("descrição pauta");
-		Pauta pautaNovo = cadastroPautaService.salvar(pauta);
-		assertEquals(pauta, pautaNovo);
+	void testCriarPautaNovo() {
+		Pauta pauta = new Pauta("Nome nova pauta", "nova pauta teste junit");
+		Pauta pautaNova = cadastroPautaService.salvar(pauta);
+		assertEquals(pauta, pautaNova);
 	}
-	
 
 	@Test
 	void testListarPautas() {
@@ -45,26 +42,32 @@ class PautasControllerTest {
 	}
 
 	@Test
-	void testBuscarPauta() {
-		Optional<Pauta> pauta = pautaRepository.findById(13L);
-
-		assertEquals(13L, pauta.get().getId());
-
+	public void testBuscarPautaPorId() {
+		Pauta pauta1 = new Pauta("Nome pauta", "pauta teste junit");
+		Pauta product2 = pautaRepository.save(pauta1);
+		Optional<Pauta> pautaOptional = pautaRepository.findById(product2.getId());
+		assertEquals(product2.getId(), pautaOptional.get().getId());
+		assertEquals(product2.getNome(), pautaOptional.get().getNome());
+		assertEquals(product2.getDescricao(), pautaOptional.get().getDescricao());
 	}
 
 	@Test
 	void testAtualizarPautaLong() {
-		Pauta pauta = new Pauta();
-		pauta.setId(13L);
-		pauta.setNome("Nome pauta Atualizada");
-		pauta.setDescricao("Descrição pauta");
-		Pauta pautaNova = cadastroPautaService.salvar(pauta);
-		assertEquals(pauta, pautaNova);
+		Pauta pauta1 = new Pauta("Nome pauta", "pauta teste junit");
+		Pauta pauta2 = pautaRepository.save(pauta1);
+		pauta2.setNome("Nome pauta Atualizado");
+		Pauta pautaNovo = cadastroPautaService.salvar(pauta2);
+		assertEquals(pauta2, pautaNovo);
 	}
 
 	@Test
-	void testExcluirPautaLong() {
-		cadastroPautaService.excluir(13L);
+	public void testExcluirPautaLong() {
+		Pauta pauta = new Pauta("Nome excluir pauta", "excluir pauta teste junit");
+
+		cadastroPautaService.salvar(pauta);
+		cadastroPautaService.excluir(pauta.getId());
+		Optional<Pauta> pautaOptional = pautaRepository.findById(pauta.getId());
+		assertEquals(Optional.empty(), pautaOptional);
 	}
 
 }

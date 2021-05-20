@@ -2,7 +2,6 @@ package com.ntconsult.desafio.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,9 +9,7 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 
-import com.ntconsult.desafio.domain.exception.VotacaoException;
 import com.ntconsult.desafio.domain.model.Associado;
 import com.ntconsult.desafio.domain.repository.AssociadoRepository;
 import com.ntconsult.desafio.domain.service.CadastroAssociadoService;
@@ -22,7 +19,6 @@ class AssociadosControllerTest {
 
 	private final AssociadoRepository associadoRepository;
 	private final CadastroAssociadoService cadastroAssociadoService;
-	private static String cpf = "";
 
 	@Autowired
 	public AssociadosControllerTest(AssociadoRepository associadoRepository,
@@ -33,19 +29,9 @@ class AssociadosControllerTest {
 
 	@Test
 	void testCriarAssociadoNovo() {
-		Associado associado = new Associado();
-		associado.setNome("Nome associado");
-		associado.setCpf(cpf);
+		Associado associado = new Associado("Nome associado", "11111111111");
 		Associado associadoNovo = cadastroAssociadoService.salvar(associado);
 		assertEquals(associado, associadoNovo);
-	}
-
-	@Test
-	void testCriarAssociadoJaExistente() {
-		Associado associado = new Associado();
-		associado.setNome("Nome associado");
-		associado.setCpf("40752682012");
-		assertThrows(VotacaoException.class, () -> cadastroAssociadoService.salvar(associado));
 	}
 
 	@Test
@@ -56,26 +42,31 @@ class AssociadosControllerTest {
 	}
 
 	@Test
-	void testBuscarAssociado() {
-		Optional<Associado> associado = associadoRepository.findById(1L);
-
-		assertEquals(1L, associado.get().getId());
-
+	public void testBuscarAssociadoPorId() {
+		Associado associado1 = new Associado("Nome associado", "22222222222");
+		Associado product2 = associadoRepository.save(associado1);
+		Optional<Associado> associadoOptional = associadoRepository.findById(product2.getId());
+		assertEquals(product2.getId(), associadoOptional.get().getId());
+		assertEquals(product2.getNome(), associadoOptional.get().getNome());
 	}
 
 	@Test
 	void testAtualizarAssociadoLong() {
-		Associado associado = new Associado();
-		associado.setId(12L);
-		associado.setNome("Nome associado Atualizado");
-		associado.setCpf("40752682012");
-		Associado associadoNovo = cadastroAssociadoService.salvar(associado);
-		assertEquals(associado, associadoNovo);
+		Associado associado1 = new Associado("Nome associado", "33333333333");
+		Associado associado2 = associadoRepository.save(associado1);
+		associado2.setNome("Nome associado Atualizado");
+		Associado associadoNovo = cadastroAssociadoService.salvar(associado2);
+		assertEquals(associado2, associadoNovo);
 	}
 
 	@Test
-	void testExcluirAssociadoLong() {
-		assertThrows(EmptyResultDataAccessException.class, () -> cadastroAssociadoService.excluir(5L));
+	public void testExcluirAssociadoLong() {
+		Associado associado = new Associado("Nome associado", "44444444444");
+
+		cadastroAssociadoService.salvar(associado);
+		cadastroAssociadoService.excluir(associado.getId());
+		Optional<Associado> associadoOptional = associadoRepository.findById(associado.getId());
+		assertEquals(Optional.empty(), associadoOptional);
 	}
 
 }
